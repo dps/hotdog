@@ -1,0 +1,19 @@
+{% extends "helix.html" %}
+{% block title %}Welcome{% endblock %}
+
+{% block content %}
+<div class="columns">
+        <div class="hero column col-xs-12">
+            <div class="hero-body">
+                <h1>To continue, please sign in.</h1>
+                <p><div id="sign-in-button" class="g-signin2" data-height="40" data-width="200" data-onsuccess="onSignIn" data-theme="dark"></div></p>
+                <p>Helix uses Google Cloud Print and therefore requires that you sign in with your Google account.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js_after_signin %}
+location.href = "{{ continue_to_url }}";
+{% endblock %}

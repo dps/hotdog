@@ -1,0 +1,18 @@
+{% extends "helix.html" %}
+{% block title %} Register {% endblock %}
+
+{% block content %}
+<div class="columns">
+        <div class="hero column col-xs-12">
+            <div class="hero-body">
+                <h1>Thank you for subscribing!</h1>
+                <p>To complete installation of your virtual printer, visit this link <a href="{{ complete_invite_url }}" target="_blank">{{ complete_invite_url }}</a></p>
+                <a href='{{ complete_invite_url }}' target="_blank"><button class="btn btn-primary">
+                    Install &rarr;
+                </button></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

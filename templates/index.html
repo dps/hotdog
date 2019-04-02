@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block head %}
+<script>
+  var availableDogs = [
+      {{ dog_list| safe }}
+  ];
+</script>
+{% endblock %}
+{% block title %}🌭{% endblock %}
+{% block body %}onLoad='load()'{% endblock %}
+{% block content %}
+<div class="columns">
+        <div class="hero column col-xs-3">
+          <img src="https://images.printify.com/mockup/5ca12035dd4f73b947055283/45153/1535/?s=400&t=1554063417000" />
+        </div>
+
+  <div class="hero column col-xs-9">
+    <div class="hero-body">
+        <h1>Hotdog pins - they're hot, dog!</h1>
+        <p>Wear your favorite hotdog emoticon</p>
+        <input class="form-input" type="text" id="hotdog" placeholder="hotdog-snowboarder" />
+        <br/>
+        <a href='/shipping'><button class="btn btn-primary">
+            Buy $12 &rarr;
+        </button></a>
+    </div>
+    <div class="form-autocomplete">
+      <!-- autocomplete input container -->
+      <div class="form-autocomplete-input form-input" id="hotdog" placeholder="hotdog-snowboarder">
+    
+        <!-- autocomplete real input box -->
+        <input class="form-input" type="text" placeholder="hotdog-snowboarder"
+          onChange="">
+      </div>
+    
+      <!-- autocomplete suggestion list -->
+      <ul class="menu">
+        <!-- menu list items -->
+        <li class="menu-item" id="autocomplete-menu">
+          <a href="#">
+            <div class="tile tile-centered">
+              <div class="tile-icon">
+                ...
+              </div>
+              <div class="tile-content">
+                ...
+              </div>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}

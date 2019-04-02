@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Recipe - {{ recipe.title }}{% endblock %}
+
+{% block content %}
+{% if recipe.error %}
+<div class="row">
+  <div class="large-12 columns">
+    <h1>Uh oh... something went wrong</h1>
+    <h2>{{ recipe.error }}</h2>
+  </div>
+</div>
+{% else %}
+<div class="row">
+  <div class="large-12 columns">
+    <h1 class="sitefont" style="margin: 1em 0 1em 0;">{{ recipe.title }}</h1>
+    {% if recipe.img %}
+    <img class="th" src="http://thumbor.us.davidsingleton.org/unsafe/1024x300/{{ recipe.img }}" class="radius" />
+    {% endif %}
+  </div>
+</div>
+
+{% if recipe.summary %}
+<div class="row" style="margin-top: 1em;">
+ <div class="large-12 columns">
+  <h5>{{ recipe.summary }}</h5>
+ </div>
+</div>
+<br/>
+{% endif %}
+
+<div class="row" style="margin-top: 2em;">
+    <div class="large-4 columns right">
+    <h2 class="sitefont">Ingredients</h2>
+    <ul>
+      {% for item in recipe.ingredients %}
+      <li style="margin: 1em 0 1em 0;"><h5>{{ item.text }}
+      	{% if item.img %}
+      	<br/><img class="th" src="http://thumbor.us.davidsingleton.org/unsafe/150x150/{{ item.img }}" />
+      	{% endif %}
+      	</h5>
+      </li>
+     {% endfor %}
+    </ul>
+  </div>
+  <div class="large-8 columns">
+    <h2 class="sitefont">Steps</h2>
+    <ol>
+    {% for step in recipe.steps %}
+      <li style="margin: 1em 0 3em 0;"><h4>{{ step.text }}
+      	{% if step.img %}
+      	<br/><img class="th" src="http://thumbor.us.davidsingleton.org/unsafe/300x150/{{ step.img }}" />
+      	{% endif %}
+      	</h4>
+      </li>
+    {% endfor %}
+    </ol>
+  </div>
+
+</div>
+{% if recipe.serving %}
+<div class="row" style="margin-top: 2em;">
+    <div class="large-8 columns">
+    <h2 class="sitefont">Serving</h2>
+    {% for line in recipe.serving %}
+    <h5>{{ line }}</h5>
+    {% endfor %}
+</div>
+</div>
+{% endif %}
+
+{% endif %}
+{% endblock %}
+
+{% block hack %}
+<div class="row" style="margin-top: 6em;">
+    <div class="large-12 columns panel">
+      <h2 class="sitefont">Copy me, hack me, fork me.</h2>
+    <br/>
+      
+    <h4><img src="/static/img/octocat.png"/><a href="https://github.com/dps/recipes/blob/master/{{ recipe.name }}">github.com/dps/recipes/{{ recipe.name }}</a></h4>
+    </div>
+</div>
+{% endblock %}
+
+{% block debug %}
+{{ recipe }}
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Search results - {{ q }} {% endblock %}
+
+{% block content %}
+{% if results %}
+<div class="row">
+  <div class="large-12 columns">
+    <h1 class="sitefont" style="margin: 1em 0 1em 0;">Search results for &quot;{{ q }}&quot;</h1>
+  </div>
+</div>
+
+{% for result in results %}
+<a href="/recipes/{{ result.name }}">
+<div class="row">
+  <div class="large-2 columns">
+  	{% if result.img %}
+  	<img class="th" src="http://thumbor.us.davidsingleton.org/unsafe/120x120/{{ result.img }}" />
+  	{% endif %}
+  </div>
+  <div class="large-10 columns">
+  	<h3 class="sitefont">{{ result.title }}</h3>
+  	<h5>{{ result.summary }}</h5>
+  </div>
+</div>
+</a>
+{% endfor %}
+
+
+{% else %}
+<div class="row">
+  <div class="large-12 columns">
+    <h1 class="sitefont" style="margin: 1em 0 1em 0;">No results found for &quot;{{ q }}&quot;</h1>
+  </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block debug %}
+{{ results }}
+{% endblock %}

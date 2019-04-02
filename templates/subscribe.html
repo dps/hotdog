@@ -1,0 +1,25 @@
+{% extends "helix.html" %}
+{% block head %}
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+var stripe = Stripe(
+  'pk_test_WvVnbetPzawrYS05rKFvOjNi',
+  {
+    betas: ['checkout_beta_4']
+  }
+);
+function load() {
+    stripe.redirectToCheckout({
+        sessionId: "{{ checkout_session.id }}",
+        });
+}
+</script>
+{% endblock %}
+
+{% block title %}Welcome{% endblock %}
+{% block body %}onload='load()'{% endblock %}
+
+{% block content %}
+
+
+{% endblock %}

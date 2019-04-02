@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block head %}
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+    var stripe = Stripe(
+        'pk_test_WvVnbetPzawrYS05rKFvOjNi',
+        {
+            betas: ['payment_intent_beta_3']
+        }
+    );
+
+    function load() {
+        var elements = stripe.elements();
+        var cardElement = elements.create('card');
+        cardElement.mount('#card-element');
+
+        document.getElementById('product_img').src = "{{ cart_headline_image_url }}";
+
+        var cardButton = document.getElementById('card-button');
+        var clientSecret = cardButton.dataset.secret;
+
+        cardButton.addEventListener('click', function (ev) {
+            stripe.handleCardPayment(
+                clientSecret, cardElement, {
+                    source_data: {
+                        owner: { name: "{{ name }}" }
+                    }
+                }
+            ).then(function (result) {
+                if (result.error) {
+                    // Display error.message in your UI.
+                    alert(result.error.message);
+                } else {
+                    location.href = '/success';
+                }
+            });
+        });
+    }
+
+    var imgRetries = 0;
+    function retryImage() {
+        console.log("retryImage " + imgRetries);
+        imgRetries++;
+        if (imgRetries < 10) {
+            document.getElementById('product_img').src = "/static/img/back.jpg";
+            setTimeout(function() { document.getElementById('product_img').src = "{{ cart_headline_image_url }}";}, 500 * imgRetries);            
+        }
+    }
+
+</script>
+{% endblock %}
+
+{% block title %}Buy{% endblock %}
+{% block body %}onload="load();"{% endblock %}
+
+{% block content %}
+<div class="columns">
+    <div class="hero column col-xs-6">
+        <div class="panel">
+            <div class="panel-header">
+                <div class="panel-title">
+                    <h6>Payment Info</h6>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="col-12 col-sm-12">
+                    <div class="form-input" id="card-element" style="padding-top: 8px;"></div>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <button class="btn btn-primary" id="card-button" data-secret="{{ client_secret }}">
+                    Pay {{ amount }}
+                </button>
+            </div>
+            <div class="panel-header">
+                <div class="panel-title"><h6>Shipping &amp; Billing Info</h6></div>
+            </div>
+            <div class="panel-body"><p>
+{% for field in cardholder_fields %}
+                {{ field[1] }}<br/>
+{% endfor %}
+            </p>
+            </div>
+        </div>
+    </div>
+    <div class="column col-xs-4">
+        <div class="hero card-header" style="padding-bottom: 0px;">
+            <div class="card-title h3">Your order</div>
+        </div>
+            <div class="card-image">
+                <img id="product_img" src="" class="img-responsive" onError="retryImage();">
+            </div>
+            
+            <div class="card-body">
+                <div class="columns">
+                <div class="column col-9">
+                  <div class="card-title h6">Hotdog Pin - 1" diameter</div>
+                </div>
+                <div class="column col-3">
+                  <div class="card-subtitle">{{ items_price }}</div>
+                </div>
+                <div class="column col-9">
+                  <div class="card-title h6">Shipping</div>
+                </div>
+                <div class="column col-3">
+                  <div class="card-subtitle" id="shipping">{{ shipping_cost }}</div>
+                </div>
+                <div class="column col-9">
+                  <div class="card-title h6">Tax</div>
+                </div>
+                <div class="column col-3">
+                  <div class="card-subtitle" id="tax">{{ tax_cost }}</div>
+                </div>
+                <div class="column col-9" style="border-top: 1px black solid;">
+                  <div class="card-title h5">Total</div>
+                </div>
+                <div class="column col-3" style="border-top: 1px black solid;">
+                  <div class="card-subtitle h5" id="total">{{ amount }}</div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+</div>
+{% endblock %}
