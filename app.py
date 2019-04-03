@@ -6,7 +6,7 @@ import redis
 import requests
 import stripe
 import sys
-from flask import Flask, Response, send_file, request, render_template, session, redirect
+from flask import Flask, Response, send_file, request, render_template, session, redirect, send_from_directory
 from printify import Printify
 
 app = Flask(__name__)
@@ -14,10 +14,6 @@ app.debug = True #hup
 app.secret_key = os.environ['FLASK_SECRET']
 stripe.api_key = os.environ['STRIPE_SECRET_KEY']
 stripe.api_version = "2018-11-08; checkout_sessions_beta=v1"
-
-hotdogs = file('static/hotdogs.txt', 'r').readlines()
-dog_list = ''.join(map(lambda line : '"%s",' % line.strip(), hotdogs))
-print >>sys.stderr,dog_list
 
 je = json.JSONEncoder()
 
@@ -51,7 +47,7 @@ def recipeapi(name):
 
 @app.route('/')
 def index():
-  return render_template('index.html', dog_list=hotdogs, session_data=session)
+  return render_template('index.html', session_data=session)
 
 @app.route('/success')
 def success():
@@ -59,9 +55,11 @@ def success():
 
 @app.route('/shipping')
 def shipping():
+  items = request.query_string
   cardholder_fields = [('name', 'Haute Daug'), ('address', '1 Bratwurst St'), ('city', 'Frankfurt'), ('state', 'CA'), ('zip', '94101'), ('email', 'holdthemustard@hotdog.com'), ('phone', '4645553633')]
   return render_template('shipping.html', session_data=session,
                          cardholder_fields=cardholder_fields,
+                         items=items,
                          cart_headline_image_url='https://images.printify.com/mockup/5ca12035dd4f73b947055283/45153/1535/?s=200&t=1554063417000')
 
 @app.route('/buy', methods=['POST'])
@@ -78,6 +76,7 @@ def buy():
     'zip': request.form['zip'],
     'email': request.form['email'],
     'phone': request.form['phone'],
+    'items': request.form['items'],
     'img': "https://emoji.slack-edge.com/T024F4A92/snowboarding-hotdog/ef4fb005a269acf4.png",
   }
   img = "https://emoji.slack-edge.com/T024F4A92/snowboarding-hotdog/ef4fb005a269acf4.png"
@@ -87,8 +86,9 @@ def buy():
   print >>sys.stderr, draft_order
   shipping_cost = draft_order['detail']['total_shipping']
   tax_cost = draft_order['detail']['total_tax']
-  items_price = 1200
-  amount = 1200 + int(shipping_cost) + int(tax_cost)
+  items = request.form['items'].split(",")
+  items_price = 1200 * len(items)
+  amount = items_price + int(shipping_cost) + int(tax_cost)
 
   intent = stripe.PaymentIntent.create(
     amount=amount,
@@ -108,7 +108,22 @@ def buy():
                          items_price=currency_minor_units_to_string(items_price),
                          tax_cost=currency_minor_units_to_string(tax_cost),
                          amount=currency_minor_units_to_string(amount),
+                         items=request.form['items'].split(","),
                          cart_headline_image_url=draft_order['front_image_url'])
+
+@app.route('/service-worker.js')
+def serve_worker():
+    return send_from_directory('./react', 'service-worker.js')
+
+@app.route('/imgs/hotdogs/<path:path>')
+def serve_dogimg(path):
+  print >>sys.stderr, path
+  return send_from_directory('./static/hotdogs', path)
+
+@app.route('/imgs/previews/<path:path>')
+def serve_previewimg(path):
+  print >>sys.stderr, path
+  return send_from_directory('./static/previews', path)
 
 @app.route('/printify_webhook')
 def pwebhook():

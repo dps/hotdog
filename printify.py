@@ -2,6 +2,7 @@ import random
 import requests
 import simplejson
 import string
+import time
 import os
 import uuid
 
@@ -70,7 +71,16 @@ if __name__ == '__main__':
         'email': 'davidsingleton@gmail.com',
         'phone': '4156190699'
     }
-    print p.create_draft_order('https://emoji.slack-edge.com/T024F4A92/snowboarding-hotdog/ef4fb005a269acf4.png', addr)
+    names = file('missing', 'r').readlines()
+
+    ufile = file('urls2.txt', 'w')
+    for name in names:
+        name = name.strip()
+        print '--> %s' % name
+        res = p.create_draft_order('http://hotdog.us.davidsingleton.org/static/hotdogs/%s' % name, addr)
+        print res['front_image_url']
+        ufile.write(name + " " + res['front_image_url'] + " <img src='%s'/>\n" % res['front_image_url'])
+        time.sleep(5)
 
 
 # r = requests.get('https://api.printify.com/v1/shops.json', params={}, headers = headers)
