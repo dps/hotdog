@@ -25,6 +25,7 @@
                 </div>
             </div>
             <form class="form-horizontal" action="/buy" method="post">
+            <input name="items" type="hidden" value="{{ items }}" />
             <div class="panel-body">
                     {% for field in cardholder_fields %}
                     <div class="form-group">

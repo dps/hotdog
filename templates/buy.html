@@ -88,14 +88,41 @@
         <div class="hero card-header" style="padding-bottom: 0px;">
             <div class="card-title h3">Your order</div>
         </div>
+
+
+
             <div class="card-image">
-                <img id="product_img" src="" class="img-responsive" onError="retryImage();">
+        <div class="carousel" style="height:400px;width:400px;">
+            <!-- carousel locator -->
+            {% for item in items %}
+            <input class="carousel-locator" id="slide-{{ loop.index }}" type="radio" name="carousel-radio" hidden="" checked="">
+            {% endfor %}
+        
+            <!-- carousel container -->
+            <div class="carousel-container">
+                <!-- carousel item -->
+                {% for item in items %}
+                <figure class="carousel-item">
+                    <label class="item-prev btn btn-action btn-lg" for="slide-4"><i class="icon icon-arrow-left"></i></label>
+                    <label class="item-next btn btn-action btn-lg" for="slide-2"><i class="icon icon-arrow-right"></i></label>
+                    <img class="img-responsive rounded" src="/imgs/previews/{{ item }}.png">
+                </figure>
+                {% endfor %}
+            </div>
+            <div class="carousel-nav">
+                <label class="nav-item text-hide c-hand" for="slide-1">1</label>
+                <label class="nav-item text-hide c-hand" for="slide-2">2</label>
+            </div>
+        </div>
+            <!--    <img id="product_img" src="" class="img-responsive" onError="retryImage();"> -->
             </div>
             
             <div class="card-body">
                 <div class="columns">
                 <div class="column col-9">
-                  <div class="card-title h6">Hotdog Pin - 1" diameter</div>
+                {% for item in items %}
+                  <div class="card-title h6">Hotdog Pin {{ item }} - 1" diameter</div>
+                {% endfor %}
                 </div>
                 <div class="column col-3">
                   <div class="card-subtitle">{{ items_price }}</div>
