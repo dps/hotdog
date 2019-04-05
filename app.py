@@ -80,13 +80,12 @@ def buy():
     'img': "",
   }
   img = ""
-  #draft_order = Printify().create_draft_order(img, shipping, items)
-  draft_order = FAKE_ORDER
+  items = request.form['items'].split(",")
+  draft_order = Printify().create_order(img, shipping, items, draft=True)
   shipping['name'] = request.form['name']
   print >>sys.stderr, draft_order
   shipping_cost = draft_order['detail']['total_shipping']
   tax_cost = draft_order['detail']['total_tax']
-  items = request.form['items'].split(",")
   items_price = 1200 * len(items)
   amount = items_price + int(shipping_cost) + int(tax_cost)
 
@@ -138,22 +137,17 @@ def webhook():
     type = request.json[u'type']
     print type
     slack_msg = ''
-    if type == u'checkout.session.completed':
-      customer = request.json[u'data'][u'object'][u'customer']
-      if not customer:
-        subscription_id = request.json[u'data'][u'object'][u'subscription']
-        subscription = stripe.Subscription.retrieve(subscription_id)
-        customer = subscription.customer
-      helix_user_email = request.json[u'data'][u'object'][u'client_reference_id']
-      creds_provider = PostgresCredsProvider(os.environ['POSTGRES_URL'])
-      creds = creds_provider.load(helix_user_email)
-      # TODO need a way to save stripe customer ID if we get it before printer
-      # creds (the usual case!)
-      if not creds:
-        creds = {}
-      creds['stripe_customer_id'] = customer
-      creds_provider.save(helix_user_email, creds)
-      slack_msg = '%s -> %s' % (helix_user_email, customer)
+    if type == u'payment_intent.succeeded':
+      piid = request.json[u'data'][u'object'][u'id']
+      metadata = request.json[u'data'][u'object'][u'metadata']
+      shipping = metadata
+      items = shipping['items'].split(",")
+      order = Printify().create_order('', shipping, items, draft=False)
+      pi = stripe.PaymentIntent.modify(piid,
+             metadata={'order_id':order['order_id'],
+                       'printify_order_id': order['printify_order_id']})
+      slack_msg = 'Fulfilled! ' + order['printify_order_id']
+
         
     if os.environ.has_key('SLACK_WEBHOOK'):
         data = {'text': ('*%s*\n' % type) + str(slack_msg)}
