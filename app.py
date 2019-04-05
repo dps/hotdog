@@ -41,10 +41,6 @@ def requires_auth(f):
         return f(*args, **kwargs)
     return decorated
 
-@app.route('/api/recipe/<name>')
-def recipeapi(name):
-  return je.encode({})
-
 @app.route('/')
 def index():
   return render_template('index.html', session_data=session)
@@ -53,6 +49,10 @@ def index():
 def success():
   return render_template('success.html', session_data=session)
 
+@app.route('/terms')
+def terms():
+  return render_template('terms.html', session_data=session)
+
 @app.route('/shipping')
 def shipping():
   items = request.query_string
@@ -60,7 +60,7 @@ def shipping():
   return render_template('shipping.html', session_data=session,
                          cardholder_fields=cardholder_fields,
                          items=items,
-                         cart_headline_image_url='https://images.printify.com/mockup/5ca12035dd4f73b947055283/45153/1535/?s=200&t=1554063417000')
+                         cart_headline_image_url='')
 
 @app.route('/buy', methods=['POST'])
 def buy():
@@ -77,10 +77,10 @@ def buy():
     'email': request.form['email'],
     'phone': request.form['phone'],
     'items': request.form['items'],
-    'img': "https://emoji.slack-edge.com/T024F4A92/snowboarding-hotdog/ef4fb005a269acf4.png",
+    'img': "",
   }
-  img = "https://emoji.slack-edge.com/T024F4A92/snowboarding-hotdog/ef4fb005a269acf4.png"
-  #draft_order = Printify().create_draft_order(img, shipping)
+  img = ""
+  #draft_order = Printify().create_draft_order(img, shipping, items)
   draft_order = FAKE_ORDER
   shipping['name'] = request.form['name']
   print >>sys.stderr, draft_order
