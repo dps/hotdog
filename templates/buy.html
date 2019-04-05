@@ -4,7 +4,7 @@
 <script src="https://js.stripe.com/v3/"></script>
 <script>
     var stripe = Stripe(
-        'pk_test_WvVnbetPzawrYS05rKFvOjNi',
+        '{{ stripe_public_key }}',
         {
             betas: ['payment_intent_beta_3']
         }
