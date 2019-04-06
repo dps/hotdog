@@ -3,3 +3,6 @@ venv/
 run_local.sh
 *.pyc
 .DS_Store
+package-lock.json
+node_modules/
+client/build/
