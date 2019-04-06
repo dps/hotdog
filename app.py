@@ -1,8 +1,6 @@
 from functools import wraps
 import json
-import io
 import os
-import redis
 import requests
 import stripe
 import sys
@@ -20,20 +18,6 @@ live_client_version = ''.join(file('live_client_version.txt', 'r').readlines())
 FAKE_ORDER = {'order_id': 'poid_948sych39e8pclsd', 'printify_order_id': u'5ca1948847b39faea623dbfd', 'front_image_url': 'https://images.printify.com/mockup/5CA1948847B39FAEA623DBFC/45153/1535/?s=400', 'detail': {u'status': u'pending', u'line_items': [{u'status': u'pending', u'product_id': u'5ca1948847b39faea623dbfc', u'shipping_cost': 400, u'print_provider_id': 20, u'cost': 978, u'variant_id': 45153, u'metadata': {u'sku': u'caseypin10_none_silver', u'country': u'United States', u'price': 1630, u'variant_label': u'1"', u'title': u'Metal Pin'}, u'quantity': 1}], u'total_price': 978, u'shipping_method': 1, u'total_tax': 0, u'created_at': 1554093192, u'address_to': {u'city': u'San Francisco', u'first_name': u'David', u'last_name': u'Singleton', u'zip': u'94114', u'country': u'United States', u'region': u'CA', u'phone': u'6464505078', u'address1': u'234 Eureka St', u'email': u'davidsingleton@gmail.com'}, u'id': u'5ca1948847b39faea623dbfd', u'total_shipping': 400, u'metadata': {u'shop_order_label': u'poid_948sych39e8pclsd', u'order_type': u'api', u'shop_order_id': u'poid_948sych39e8pclsd'}}}
 def currency_minor_units_to_string(minor_units, currency='usd'):
   return '$' + '{:0,.2f}'.format(minor_units/100.0)
-
-def authenticate(f):
-    """Sends a 401 response that enables basic auth"""
-
-    session['continue_to_url'] = '/' + f.func_name
-    return redirect('/signin')
-
-def requires_auth(f):
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        if not session.has_key('user_email'):
-            return authenticate(f)
-        return f(*args, **kwargs)
-    return decorated
 
 @app.route('/')
 def index():
@@ -107,7 +91,7 @@ def buy():
 
 @app.route('/service-worker.js')
 def serve_worker():
-    return send_from_directory('./react', 'service-worker.js')
+    return send_from_directory('./static/js', 'service-worker.js')
 
 @app.route('/imgs/hotdogs/<path:path>')
 def serve_dogimg(path):
