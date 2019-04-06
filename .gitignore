@@ -1,0 +1,5 @@
+.vscode/
+venv/
+run_local.sh
+*.pyc
+.DS_Store
