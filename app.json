@@ -1,0 +1,42 @@
+{
+    "name": "hotdog pins",
+    "description": "hotdog pins FTW",
+    "repository": "https://github.com/dps/hotdog",
+    "keywords": [
+        "stripe"
+    ],
+    "env": {
+        "STRIPE_TEST_SECRET_KEY": {
+            "description": "Find this at https://dashboard.stripe.com/account/apikeys (it'll look like sk_****)",
+            "required": true
+        },
+        "STRIPE_PUBLIC_KEY": {
+            "description": "Find this at https://dashboard.stripe.com/account/apikeys (it'll look like pk_****)",
+            "required": true
+        },
+        "FLASK_SECRET": {
+            "description": "secret key for http session cookies (use a random string)",
+            "required": false
+        },
+        "PRINTIFY_API_TOKEN": {
+            "description": "Printify API token - find this at https://printify.com/app/account/api",
+            "required": true
+        },
+        "PRINTIFY_PROVIDER_ID": {
+            "description": "Printify order field (see printify docs)",
+            "required": true
+        },
+        "PRINTIFY_VARIANT_ID": {
+            "description": "Printify order field (see printify docs)",
+            "required": true
+        },
+        "PRINTIFY_SHIP_STORE_ID": {
+            "description": "Printify order field (see printify docs)",
+            "required": true
+        },
+        "PRINTIFY_DRAFT_STORE_ID": {
+            "description": "Printify order field (see printify docs)",
+            "required": true
+        }        
+    }
+}
