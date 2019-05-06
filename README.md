@@ -1,1 +1,2 @@
-[![Build Status](https://travis-ci.org/dps/recipefe.png?branch=master)](https://travis-ci.org/dps/recipefe)
+
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)

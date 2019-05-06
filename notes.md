@@ -1,6 +1,6 @@
 # Howto hotdog pin images
 
-`https://emoji.slack-edge.com/T024F4A92/ylukem-hotdog/265cfab870a3c85c.png`
+`https://emoji.slack-edge.com/----/----/-----.png`
 
 ```
 cat hdc | grep -o https://emoji[^\']*hotdog[^\']* > urls.txt
