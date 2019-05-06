@@ -26,6 +26,10 @@
             "description": "Printify order field (see printify docs)",
             "required": true
         },
+        "PRINTIFY_BLUEPRINT_ID": {
+            "description": "Printify order field (see printify docs)",
+            "required": true
+        },
         "PRINTIFY_VARIANT_ID": {
             "description": "Printify order field (see printify docs)",
             "required": true
