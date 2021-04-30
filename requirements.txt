@@ -40,7 +40,7 @@ redis==3.2.0
 requests==2.21.0
 rq==0.13.0
 rq-scheduler==0.9
-rsa==4.0
+rsa==4.7.1
 simplejson==3.16.0
 singledispatch==3.4.0.3
 six==1.12.0
